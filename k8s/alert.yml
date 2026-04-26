@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: alertmanager-monitoring-kube-prometheus-alertmanager
+  namespace: default
+type: Opaque
+stringData:
+  alertmanager.yaml: |
+    global:
+      resolve_timeout: 5m
+
+    route:
+      receiver: slack-alert
+      routes:
+        - match:
+            severity: critical
+          receiver: email-alert
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 1h
+
+    receivers:
+      - name: slack-alert
+        slack_configs:
+          - api_url: "REPLACE_WITH_SLACK_WEBHOOK"
+            channel: '#all-devops-alerts'
+            send_resolved: true
+
+      - name: email-alert
+        email_configs:
+          - to: 'ashwiniethiraj@gmail.com'
+            from: 'ashwiniethiraj@gmail.com'
+            smarthost: 'smtp.gmail.com:587'
+            auth_username: 'ashwiniethiraj@gmail.com'
+            auth_password: 'REPLACE_WITH_YOUR_APP_PASSWORD'   # 👈 replace locally
+            require_tls: true
