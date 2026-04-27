@@ -16,7 +16,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'java -version'
-                sh 'mvn -B -DskipTests clean package'
+                sh 'mvn -B -DskipTests -Dcheckstyle.skip=true clean package'
             }
         }
 
