@@ -32,7 +32,7 @@ pipeline {
                     sh '''
                     mvn sonar:sonar \
                       -Dsonar.projectKey=petclinic \
-                      -Dsonar.host.url=http://13.233.186.89:9000 \
+                      -Dsonar.host.url=http://13.206.99.85:9000 \
                       -Dsonar.login=$SONAR_AUTH_TOKEN
                     '''
                 }
