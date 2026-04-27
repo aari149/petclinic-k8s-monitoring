@@ -30,8 +30,8 @@ pipeline {
             sh '''
             mvn sonar:sonar \
               -Dsonar.projectKey=petclinic \
-              -Dsonar.host.url=http://<EC2-IP>:9000 \
-              -Dsonar.login=$SONAR_AUTH_TOKEN
+              -Dsonar.host.url=http://13.233.186.89:9000 \
+              -Dsonar.login=$SONAR_TOKEN
             '''
         }
     }
