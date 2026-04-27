@@ -22,19 +22,6 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'mvn test'stage('Build') {
-        steps {
-        withEnv([
-            "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64",
-            "PATH+JAVA=/usr/lib/jvm/java-17-openjdk-amd64/bin"
-        ]) {
-            sh 'java -version'
-            sh 'mvn -B -DskipTests clean package'
-        }
-    }
-}
-            }
-        }
-        
+                sh 'mvn test'       
     }
 }
