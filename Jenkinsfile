@@ -24,4 +24,16 @@ pipeline {
             steps {
                 sh 'mvn test'       
     }
+    stage('SonarQube Analysis') {
+    steps {
+        withSonarQubeEnv('sonar') {
+            sh '''
+            mvn sonar:sonar \
+              -Dsonar.projectKey=petclinic \
+              -Dsonar.host.url=http://<EC2-IP>:9000 \
+              -Dsonar.login=$SONAR_AUTH_TOKEN
+            '''
+        }
+    }
+}
 }
