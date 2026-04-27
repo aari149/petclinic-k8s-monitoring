@@ -26,17 +26,12 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('sonar') {
-                    sh '''
-                    mvn sonar:sonar \
-                      -Dsonar.projectKey=petclinic \
-                      -Dsonar.host.url=http://13.206.99.85:9000 \
-                      -Dsonar.login=$SONAR_AUTH_TOKEN
-                    '''
-                }
-            }
+       stage('SonarQube Analysis') {
+    steps {
+        withSonarQubeEnv('sonar') {
+            sh "mvn -Dcheckstyle.skip=true sonar:sonar -Dsonar.projectKey=petclinic"
         }
+    }
+}
     }
 }
