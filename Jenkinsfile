@@ -31,12 +31,12 @@ pipeline {
           
         stage('Docker Build'){
             steps{
-                sh 'docker build -t petclinic:v1 .'
+                sh 'docker build -t petclinic:v2 .'
             }
         }
         stage('Trivy Security Scan'){
             steps{
-            sh 'trivy image --severity HIGH,CRITICAL petclinic:v1'
+            sh 'trivy image --severity HIGH,CRITICAL petclinic:v2'
     }
 }
         stage('Docker push'){
