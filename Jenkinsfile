@@ -28,6 +28,9 @@ pipeline {
         stage('Docker Build'){
             steps{
                 sh 'docker build -t petclinic:v1 .'
+            }
+        }
+        stage('Trivy Security Scan'){
+            sh 'trivy image --severity HIGH,CRITICAL petclinic:v1'
     }
 }
-    }}
