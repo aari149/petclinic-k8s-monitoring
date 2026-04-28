@@ -34,3 +34,5 @@ pipeline {
             sh 'trivy image --severity HIGH,CRITICAL petclinic:v1'
     }
 }
+}
+}
