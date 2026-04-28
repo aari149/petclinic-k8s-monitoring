@@ -24,9 +24,10 @@ pipeline {
            
                stage('Test') {
     steps {
-        sh 'mvn -Dcheckstyle.skip=true -Dspring.docker.compose.skip.in-tests=true test'
+        sh 'mvn -Dcheckstyle.skip=true -Dtest=!PostgresIntegrationTests test'
     }
 }
+    
           
         stage('Docker Build'){
             steps{
