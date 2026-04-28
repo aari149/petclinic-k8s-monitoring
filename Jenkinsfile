@@ -25,13 +25,8 @@ pipeline {
                 sh 'mvn -Dcheckstyle.skip=true test'
             }
         }
-
-       stage('SonarQube Analysis') {
-    steps {
-        withSonarQubeEnv('sonar') {
-            sh "mvn -Dcheckstyle.skip=true sonar:sonar -Dsonar.projectKey=petclinic"
-        }
-    }
-}
+        stage('Docker Build'){
+            steps{
+                sh 'docker build -t petclinic:v1 .'
     }
 }
