@@ -30,3 +30,4 @@ pipeline {
                 sh 'docker build -t petclinic:v1 .'
     }
 }
+    }}
