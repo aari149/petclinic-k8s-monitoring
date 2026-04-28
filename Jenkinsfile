@@ -22,7 +22,11 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'mvn -Dcheckstyle.skip=true test'
+               stage('Test') {
+    steps {
+        sh 'mvn -Dcheckstyle.skip=true -Dspring.docker.compose.skip.in-tests=true test'
+    }
+}
             }
         }
         stage('Docker Build'){
