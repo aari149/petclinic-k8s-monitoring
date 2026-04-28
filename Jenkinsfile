@@ -20,15 +20,14 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
+       
+           
                stage('Test') {
     steps {
         sh 'mvn -Dcheckstyle.skip=true -Dspring.docker.compose.skip.in-tests=true test'
     }
 }
-            }
-        }
+          
         stage('Docker Build'){
             steps{
                 sh 'docker build -t petclinic:v1 .'
