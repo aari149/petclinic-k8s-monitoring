@@ -31,6 +31,7 @@ pipeline {
             }
         }
         stage('Trivy Security Scan'){
+            steps{
             sh 'trivy image --severity HIGH,CRITICAL petclinic:v1'
     }
 }
