@@ -39,5 +39,20 @@ pipeline {
             sh 'trivy image --severity HIGH,CRITICAL petclinic:v1'
     }
 }
-}
+        stage('Docker push'){
+            steps{
+                withCredentials([usernamePassword(
+                    credentialsId: 'docker-creds',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS
+                    )]){
+                    sh '''
+                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                    docker tag petclinic:v1 $DOCKER_USER/petclinic:v1
+                    docker push $DOCKER_USER/petclinic:v1
+                    '''
+                }
+                   }
+                      }
+    }
 }
