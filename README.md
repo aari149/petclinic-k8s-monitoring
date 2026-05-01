@@ -79,3 +79,68 @@ docker start sonarqube
 docker logs -f sonarqube
 
 Outcome --> SonarQube service became accessible and analysis completed successfully in the pipeline.
+1. Docker Image Tagging Issue
+🔹 Problem
+New deployments were overwriting previous images, making rollback difficult.
+🔹 Impact
+No version tracking of images, risk during deployments.
+🔹 Root Cause
+Static image tags were used instead of dynamic versioning.
+🔹 Fix
+Used Jenkins build number for tagging:
+docker build -t petclinic:${BUILD_NUMBER} .
+🔹 Outcome
+Each build generated a unique image version, enabling traceability and rollback.
+
+2. Docker Login & Push Failure
+🔹 Problem
+Docker push failed due to authentication error.
+🔹 Impact
+Image could not be pushed to registry, blocking deployment.
+🔹 Root Cause
+Credentials were not handled securely in pipeline.
+🔹 Fix
+Used Jenkins credentials:
+withCredentials([usernamePassword(...)]) {  docker login -u $DOCKER_USER --password-stdin}
+🔹 Outcome
+Secure authentication enabled successful image push.
+
+3. Pipeline Blocked by Security Scan
+🔹 Problem
+Pipeline failed when Trivy detected vulnerabilities.
+🔹 Impact
+Deployment stopped even for non-critical fixes.
+🔹 Root Cause
+Strict failure condition on HIGH/CRITICAL vulnerabilities.
+🔹 Fix
+Allowed pipeline to continue while reporting:
+trivy image ... || true
+🔹 Outcome
+Pipeline continued while still maintaining security visibility.
+
+4. Application Port Exposure Issue (k3s)
+🔹 Problem
+Application deployed successfully but not accessible externally.
+🔹 Impact
+Unable to verify deployment via browser.
+🔹 Root Cause
+Service was not exposed properly.
+🔹 Fix
+Exposed using NodePort:
+kubectl expose deployment petclinic --type=NodePort --port=8080kubectl get svc
+🔹 Outcome
+Application became accessible via node IP and port.
+
+5. SonarQube Quality Gate Blocking Pipeline
+🔹 Problem
+Pipeline failed at quality gate stage.
+🔹 Impact
+Build stopped before deployment.
+🔹 Root Cause
+Code did not meet defined quality thresholds.
+🔹 Fix
+Configured:
+waitForQualityGate abortPipeline: true
+🔹 Outcome
+Ensured only quality-approved code proceeds to deployment.
+
