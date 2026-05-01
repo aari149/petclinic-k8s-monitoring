@@ -40,3 +40,22 @@ Developer Push
 ---
 TRIVY OUTPUT
 ![Screenshot](https://github.com/user-attachments/assets/b7d49fc8-c252-4151-8ebc-c877c5c9ea27)
+
+Challenges & Fixes
+ 1. Jenkins Node Offline (Low Disk Space)
+Problem
+Jenkins agent went offline with:Disk space below threshold
+
+Impact
+Builds stuck in queue,No executor available and finally CI/CD pipeline halted
+
+Root Cause
+Build artifacts, Docker images, and logs filled /var/lib/jenkins
+Insufficient EBS storage on EC2
+
+Fix:Expanded EBS volume
+Cleaned disk:
+docker system prune -a
+rm -rf /var/lib/jenkins/workspace/*
+Verified:
+df -h
