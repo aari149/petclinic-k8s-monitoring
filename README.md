@@ -42,20 +42,19 @@ TRIVY OUTPUT
 ![Screenshot](https://github.com/user-attachments/assets/b7d49fc8-c252-4151-8ebc-c877c5c9ea27)
 
 Challenges & Fixes
- 1. Jenkins Node Offline (Low Disk Space)
+1.Jenkins Node Disk Space Issue
+
 Problem
-Jenkins agent went offline with:Disk space below threshold
+During a pipeline run, builds were stuck in queue and not executing. On checking Jenkins, the node had gone offline due to low disk space.
 
 Impact
-Builds stuck in queue,No executor available and finally CI/CD pipeline halted
+CI/CD pipeline was blocked since no executor was available, stopping all builds and deployments.
 
 Root Cause
-Build artifacts, Docker images, and logs filled /var/lib/jenkins
-Insufficient EBS storage on EC2
+Disk space in /var/lib/jenkins was exhausted due to accumulated build artifacts, logs, and unused Docker images.
 
-Fix:Expanded EBS volume
-Cleaned disk:
-docker system prune -a
-rm -rf /var/lib/jenkins/workspace/*
-Verified:
-df -h
+Fix
+Cleaned up unused Docker resources and old workspace files, then increased the EC2 EBS volume to add more storage.
+
+Outcome
+Jenkins node came back online and pipelines resumed successfully, highlighting the need for disk monitoring and cleanup.
