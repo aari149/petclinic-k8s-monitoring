@@ -43,7 +43,7 @@ TRIVY OUTPUT
 
 Challenges & Fixes
 
-1.Jenkins Node Disk Space Issue
+**1.Jenkins Node Disk Space Issue**
 Problem --> During a pipeline run, builds were stuck in queue and not executing. On checking Jenkins, the node had gone offline due to low disk space.
 
 Impact --> CI/CD pipeline was blocked since no executor was available, stopping all builds and deployments.
@@ -62,7 +62,7 @@ rm -rf /var/lib/jenkins/workspace/*
 
 Outcome --> Jenkins node came back online and pipelines resumed successfully, highlighting the need for disk monitoring and cleanup.
 
-2.SonarQube Connectivity Issue
+**2.SonarQube Connectivity Issue**
 Problem -->SonarQube analysis failed with a 'connection refused error' during pipeline execution.
 
 Impact  --> Code quality stage failed, stopping the CI/CD pipeline.
