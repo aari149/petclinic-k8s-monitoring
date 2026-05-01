@@ -42,8 +42,8 @@ TRIVY OUTPUT
 ![Screenshot](https://github.com/user-attachments/assets/b7d49fc8-c252-4151-8ebc-c877c5c9ea27)
 
 Challenges & Fixes
-1.Jenkins Node Disk Space Issue
 
+1.Jenkins Node Disk Space Issue
 Problem
 During a pipeline run, builds were stuck in queue and not executing. On checking Jenkins, the node had gone offline due to low disk space.
 
