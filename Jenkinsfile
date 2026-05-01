@@ -10,7 +10,7 @@ pipeline {
         IMAGE_NAME= 'petclinic'
         IMAGE_TAG= ${BUILD_NUMBER}
         APP_NAME = 'petclinic'
-        SONAR_HOST      = credentials('sonar-host-url')
+        SONAR_HOST      = 'http://52.66.206.239:9000/'
         SONAR_TOKEN     = credentials('sonar-token')
     }
     stages {
