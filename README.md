@@ -25,13 +25,6 @@ Developer Push
   ── Kubernetes Deployment (k3s → EKS) coming in Phase 2 ──
 ```
 
----
-
-
----
-TRIVY OUTPUT
-![Screenshot](https://github.com/user-attachments/assets/b7d49fc8-c252-4151-8ebc-c877c5c9ea27)
-
 ## What Each Tool Prevents
 
 | Tool | Without It | With It |
@@ -41,3 +34,10 @@ TRIVY OUTPUT
 | Trivy | Vulnerable image deployed | Pipeline fails on HIGH/CRITICAL CVE |
 | Multi-stage Docker | 800MB image with build tools exposed | 180MB clean runtime image |
 | Jenkins credentials | Passwords in Jenkinsfile / Git | Secrets never touch source code |
+
+---
+
+
+---
+TRIVY OUTPUT
+![Screenshot](https://github.com/user-attachments/assets/b7d49fc8-c252-4151-8ebc-c877c5c9ea27)
