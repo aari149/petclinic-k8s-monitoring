@@ -32,7 +32,6 @@ Developer Push
 | SonarQube | Bug ships to production | Caught before Docker build |
 | Quality Gate | Low coverage goes unnoticed | Pipeline blocks bad code |
 | Trivy | Vulnerable image deployed | Pipeline fails on HIGH/CRITICAL CVE |
-| Multi-stage Docker | 800MB image with build tools exposed | 180MB clean runtime image |
 | Jenkins credentials | Passwords in Jenkinsfile / Git | Secrets never touch source code |
 
 ---
