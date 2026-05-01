@@ -44,13 +44,13 @@ TRIVY OUTPUT
 Challenges & Fixes
 
 **1.Jenkins Node Disk Space Issue**
-Problem --> During a pipeline run, builds were stuck in queue and not executing. On checking Jenkins, the node had gone offline due to low disk space.
+•Problem --> During a pipeline run, builds were stuck in queue and not executing. On checking Jenkins, the node had gone offline due to low disk space.
 
-Impact --> CI/CD pipeline was blocked since no executor was available, stopping all builds and deployments.
+•Impact --> CI/CD pipeline was blocked since no executor was available, stopping all builds and deployments.
 
-Root Cause --> Disk space in /var/lib/jenkins was exhausted due to accumulated build artifacts, logs, and unused Docker images.
+•Root Cause --> Disk space in /var/lib/jenkins was exhausted due to accumulated build artifacts, logs, and unused Docker images.
 
-Fix --> 
+•Fix --> 
 Checked disk usage: df -h
 
 Cleaned up unused Docker resources and workspace files:
@@ -60,21 +60,21 @@ rm -rf /var/lib/jenkins/workspace/*
 
 (Also extended EC2 EBS volume from AWS console)
 
-Outcome --> Jenkins node came back online and pipelines resumed successfully, highlighting the need for disk monitoring and cleanup.
+•Outcome --> Jenkins node came back online and pipelines resumed successfully, highlighting the need for disk monitoring and cleanup.
 
 **2.SonarQube Connectivity Issue**
-Problem -->SonarQube analysis failed with a 'connection refused error' during pipeline execution.
+•Problem -->SonarQube analysis failed with a 'connection refused error' during pipeline execution.
 
-Impact  --> Code quality stage failed, stopping the CI/CD pipeline.
+•Impact  --> Code quality stage failed, stopping the CI/CD pipeline.
 
-Root Cause--> SonarQube service (Docker container) was not running.
+•Root Cause--> SonarQube service (Docker container) was not running.
 
-Fix --> Checked running containers and restarted SonarQube:
+•Fix --> Checked running containers and restarted SonarQube:
 
 docker ps -a
 docker start sonarqube
 
-Verified service health using logs:
+•Verified service health using logs:
 
 docker logs -f sonarqube
 
