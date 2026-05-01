@@ -6,6 +6,13 @@ pipeline {
         jdk 'jdk17'
     }
 
+    environment{
+        IMAGE_NAME= 'petclinic'
+        IMAGE_TAG= ${BUILD_NUMBER}
+        APP_NAME = 'petclinic'
+        SONAR_HOST      = credentials('sonar-host-url')
+        SONAR_TOKEN     = credentials('sonar-token')
+    }
     stages {
         stage('Checkout') {
             steps {
@@ -25,18 +32,31 @@ pipeline {
                stage('Test') {
     steps {
         sh 'mvn -Dcheckstyle.skip=true -Dtest=!PostgresIntegrationTests test'
+        post{
+            always{
+                junit 'target/surefire-reports/*.xml'
     }
 }
-    
+    stage('Sonarqube analysis'){
+        steps{
+            withSonarqubeEnv('SonarQube'){
+            ''' 
+            mvn sonar:sonar \
+            -Dsonar.projectKey=${APP_NAME} \
+            -Dsonar.host.url = ${SONAR_HOST} \
+            -Dsonar.login: ${SONAR_TOKEN} \
+            -Dsonar.java.binaries=target/classes
+            '''
+            }}}
           
         stage('Docker Build'){
             steps{
-                sh 'docker build -t petclinic:v2 .'
+                sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .'
             }
         }
         stage('Trivy Security Scan'){
             steps{
-            sh 'trivy image --severity HIGH,CRITICAL petclinic:v2'
+            sh 'trivy image --exit-code 1 --severity HIGH,CRITICAL --format table ${IMAGE_NAME}:${IMAGE_TAG}'
     }
 }
         stage('Docker push'){
@@ -48,8 +68,8 @@ pipeline {
                     )]){
                     sh '''
                     echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                    docker tag petclinic:v1 $DOCKER_USER/petclinic:v2
-                    docker push $DOCKER_USER/petclinic:v2
+                    docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${DOCKER_USER}/${IMAGE_NAME}:${IMAGE_TAG}
+                    docker push ${DOCKER_USER}/${IMAGE_NAME}:${IMAGE_TAG}
                     '''
                 }
                    }
