@@ -85,5 +85,25 @@ pipeline {
                 }
             }
         }
+        stage('Deploy to k3s (Dev/Staging)') {
+    when {
+        branch 'master'
+    }
+    steps {
+        withKubeConfig([credentialsId: 'k3s-kubeconfig']) {
+            sh """
+                kubectl create namespace staging || true
+
+                kubectl apply -f k8s/ -n staging
+
+                kubectl set image deployment/${APP_NAME} \
+                ${APP_NAME}=${DOCKER_USER}/${IMAGE_NAME}:${IMAGE_TAG} \
+                -n staging
+
+                kubectl rollout status deployment/${APP_NAME} -n staging
+            """
+        }
+    }
+}
     }
 }
