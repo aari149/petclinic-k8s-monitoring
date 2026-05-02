@@ -222,7 +222,7 @@ docker start sonarqube
 docker logs -f sonarqube
 
 Outcome --> SonarQube service became accessible and analysis completed successfully in the pipeline.
-1. Docker Image Tagging Issue
+3. Docker Image Tagging Issue
 🔹 Problem
 New deployments were overwriting previous images, making rollback difficult.
 🔹 Impact
@@ -235,7 +235,7 @@ docker build -t petclinic:${BUILD_NUMBER} .
 🔹 Outcome
 Each build generated a unique image version, enabling traceability and rollback.
 
-2. Docker Login & Push Failure
+4. Docker Login & Push Failure
 🔹 Problem
 Docker push failed due to authentication error.
 🔹 Impact
@@ -248,7 +248,7 @@ withCredentials([usernamePassword(...)]) {  docker login -u $DOCKER_USER --passw
 🔹 Outcome
 Secure authentication enabled successful image push.
 
-3. Pipeline Blocked by Security Scan
+5. Pipeline Blocked by Security Scan
 🔹 Problem
 Pipeline failed when Trivy detected vulnerabilities.
 🔹 Impact
@@ -261,7 +261,7 @@ trivy image ... || true
 🔹 Outcome
 Pipeline continued while still maintaining security visibility.
 
-4. Application Port Exposure Issue (k3s)
+6. Application Port Exposure Issue (k3s)
 🔹 Problem
 Application deployed successfully but not accessible externally.
 🔹 Impact
@@ -274,7 +274,7 @@ kubectl expose deployment petclinic --type=NodePort --port=8080kubectl get svc
 🔹 Outcome
 Application became accessible via node IP and port.
 
-5. SonarQube Quality Gate Blocking Pipeline
+7. SonarQube Quality Gate Blocking Pipeline
 🔹 Problem
 Pipeline failed at quality gate stage.
 🔹 Impact
