@@ -93,6 +93,37 @@ pipeline {
         }
     }
 }
+        stage('Deploy to PROD') {
+    when {
+        branch 'main'
+    }
+    steps {
+        input "Approve Production Deployment?"
+
+        withKubeConfig([credentialsId: 'kops-kubeconfig']) {
+            sh '''
+            set -e
+
+            echo "Creating namespace..."
+            kubectl create namespace prod || true
+
+            echo "Applying manifests..."
+            kubectl apply -f k8s/ -n prod
+
+            echo "Applying monitoring configs..."
+            kubectl apply -f k8s/ -n monitoring || true
+
+            echo "Updating image..."
+            kubectl set image deployment/$APP_NAME \
+            $APP_NAME=$DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG \
+            -n prod
+
+            echo "Waiting for rollout..."
+            kubectl rollout status deployment/$APP_NAME -n prod
+            '''
+        }
+    }
+}
 
         stage('Cleanup Docker Images') {
             steps {
