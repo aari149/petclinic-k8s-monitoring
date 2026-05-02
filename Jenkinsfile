@@ -68,9 +68,7 @@ pipeline {
         }
 
         stage('Deploy to k3s') {
-            when {
-                branch 'develop'
-            }
+          
             steps {
                 withKubeConfig([credentialsId: 'k3s-kubeconfig']) {
                     sh '''
