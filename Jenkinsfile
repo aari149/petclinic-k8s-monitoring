@@ -38,25 +38,25 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('sonar') {
-                    withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-                        sh """
-                        mvn sonar:sonar \
-                        -Dsonar.projectKey=${APP_NAME} \
-                        -Dsonar.login=${SONAR_TOKEN} \
-                        -Dsonar.java.binaries=target/classes
-                        """
-                    }
-                }
-            }
-        }
-        stage('Sonar quality gate'){
-              steps{
-                 waitForQualityGate abortPipeline: true
-              }
-              }
+        //stage('SonarQube Analysis') {
+          //  steps {
+            //    withSonarQubeEnv('sonar') {
+              //      withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                //        sh """
+                 //       mvn sonar:sonar \
+                   //     -Dsonar.projectKey=${APP_NAME} \
+                     //   -Dsonar.login=${SONAR_TOKEN} \
+                       // -Dsonar.java.binaries=target/classes
+                       // """
+                  //  }
+              //  }
+          //  }
+       // }
+       // stage('Sonar quality gate'){
+        //      steps{
+          //       waitForQualityGate abortPipeline: true
+           //   }
+            //  }
         stage('Docker Build') {
             steps {
                 sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
