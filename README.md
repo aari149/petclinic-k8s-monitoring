@@ -1,16 +1,16 @@
-# 🚀 End-to-End DevOps Pipeline with Kubernetes & Monitoring
+#  End-to-End DevOps Pipeline with Kubernetes & Monitoring
 
 This project demonstrates a complete DevOps workflow including CI/CD, containerization, Kubernetes deployment, and monitoring using Prometheus and Grafana on AWS.
 
 ---
 
-## 📌 Overview
+##  Overview
 
 The application is deployed using an automated pipeline that builds, scans, pushes Docker images, and deploys them to a Kubernetes cluster provisioned using kOps. Monitoring and alerting are implemented using Prometheus, Grafana, and Alertmanager.
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 GitHub → Jenkins → Docker → DockerHub → Kubernetes (kOps on AWS)
@@ -22,7 +22,7 @@ GitHub → Jenkins → Docker → DockerHub → Kubernetes (kOps on AWS)
 
 ---
 
-## ⚙️ Tech Stack
+##  Tech Stack
 
 * **CI/CD**: Jenkins
 * **Containerization**: Docker
@@ -48,7 +48,7 @@ GitHub → Jenkins → Docker → DockerHub → Kubernetes (kOps on AWS)
 
 ---
 
-## ☸️ Kubernetes Deployment
+## Kubernetes Deployment
 
 * Deployment and ReplicaSet for application
 * Service (NodePort / LoadBalancer)
@@ -58,7 +58,7 @@ GitHub → Jenkins → Docker → DockerHub → Kubernetes (kOps on AWS)
 
 ---
 
-## 📊 Monitoring & Alerting
+## Monitoring & Alerting
 
 ### Prometheus
 
@@ -70,12 +70,13 @@ GitHub → Jenkins → Docker → DockerHub → Kubernetes (kOps on AWS)
 
 * Dashboard creation
 * Visualization of application metrics
-
+<img width="1048" height="600" alt="Screenshot 2026-04-25 195457" src="https://github.com/user-attachments/assets/00ae9f00-d337-4759-bb91-8b2aa3a29c75" />
 ### Alerting
 
 * PrometheusRule for alert definitions
 * Alertmanager for routing alerts
 * Slack & Email notifications
+  <img width="979" height="374" alt="image" src="https://github.com/user-attachments/assets/8738e73d-9be8-4ed4-a873-85768c35c94c" />
 
 ---
 
@@ -185,9 +186,9 @@ Ashwini
 
 ---
 <img width="979" height="442" alt="image" src="https://github.com/user-attachments/assets/43eb3704-5b19-4f8f-ae2d-edadc76fd32e" />
-<img width="979" height="374" alt="image" src="https://github.com/user-attachments/assets/8738e73d-9be8-4ed4-a873-85768c35c94c" />
-CUSTOM DASHBOARD
-<img width="1048" height="600" alt="Screenshot 2026-04-25 195457" src="https://github.com/user-attachments/assets/00ae9f00-d337-4759-bb91-8b2aa3a29c75" />
+
+
+
 
 
 
