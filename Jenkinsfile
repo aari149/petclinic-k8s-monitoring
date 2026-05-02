@@ -10,6 +10,7 @@ pipeline {
         IMAGE_NAME = 'petclinic'
         IMAGE_TAG  = "${BUILD_NUMBER}"
         APP_NAME   = 'petclinic'
+        DOCKER_USER = 'ashwiniethiraj'   // ✅ ADD THIS
     }
 
     stages {
@@ -38,25 +39,6 @@ pipeline {
             }
         }
 
-        //stage('SonarQube Analysis') {
-          //  steps {
-            //    withSonarQubeEnv('sonar') {
-              //      withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-                //        sh """
-                 //       mvn sonar:sonar \
-                   //     -Dsonar.projectKey=${APP_NAME} \
-                     //   -Dsonar.login=${SONAR_TOKEN} \
-                       // -Dsonar.java.binaries=target/classes
-                       // """
-                  //  }
-              //  }
-          //  }
-       // }
-       // stage('Sonar quality gate'){
-        //      steps{
-          //       waitForQualityGate abortPipeline: true
-           //   }
-            //  }
         stage('Docker Build') {
             steps {
                 sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
@@ -65,7 +47,6 @@ pipeline {
 
         stage('Trivy Security Scan') {
             steps {
-                // sh "trivy image --exit-code 1 --severity HIGH,CRITICAL ${IMAGE_NAME}:${IMAGE_TAG}"
                 sh "trivy image --severity HIGH,CRITICAL ${IMAGE_NAME}:${IMAGE_TAG} || true"
             }
         }
@@ -74,38 +55,56 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(
                     credentialsId: 'docker-creds',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
+                    usernameVariable: 'USER',
+                    passwordVariable: 'PASS'
                 )]) {
-                    sh """
-                    echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
-                    docker tag ${IMAGE_NAME}:${IMAGE_TAG} \$DOCKER_USER/${IMAGE_NAME}:${IMAGE_TAG}
-                    docker push \$DOCKER_USER/${IMAGE_NAME}:${IMAGE_TAG}
-                    """
+                    sh '''
+                    echo $PASS | docker login -u $USER --password-stdin
+                    docker tag ${IMAGE_NAME}:${IMAGE_TAG} $USER/${IMAGE_NAME}:${IMAGE_TAG}
+                    docker push $USER/${IMAGE_NAME}:${IMAGE_TAG}
+                    '''
                 }
             }
         }
-        stage('Deploy to k3s (Dev/Staging)') {
-  //  when {
-   //     branch 'master'
-    //}
-    steps {
-        withKubeConfig([credentialsId: 'k3s-kubeconfig']) {
-            sh """
-                kubectl get nodes 
-                
-                kubectl create namespace staging || true
 
-                kubectl apply -f k8s/ -n staging
+        stage('Deploy to k3s') {
+            when {
+                branch 'develop'
+            }
+            steps {
+                withKubeConfig([credentialsId: 'k3s-kubeconfig']) {
+                    sh '''
+                    set -e
 
-                kubectl set image deployment/${APP_NAME} \
-                ${APP_NAME}=${DOCKER_USER}/${IMAGE_NAME}:${IMAGE_TAG} \
-                -n staging
+                    export IMAGE="$DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG"
 
-                kubectl rollout status deployment/${APP_NAME} -n staging
-            """
+                    echo "Checking cluster..."
+                    kubectl get nodes
+
+                    echo "Creating namespace..."
+                    kubectl create namespace staging || true
+
+                    echo "Applying manifests..."
+                    kubectl apply -f k8s/ -n staging
+
+                    echo "Updating image..."
+                    kubectl set image deployment/$APP_NAME $APP_NAME=$IMAGE -n staging || true
+
+                    echo "Rollout status..."
+                    kubectl rollout status deployment/$APP_NAME -n staging
+                    '''
+                }
+            }
         }
-    }
-}
+
+        stage('Cleanup Docker Images') {
+            steps {
+                sh '''
+                echo "Cleaning old images..."
+                docker image prune -f
+                docker builder prune -f
+                '''
+            }
+        }
     }
 }
