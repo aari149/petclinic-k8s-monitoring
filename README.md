@@ -180,17 +180,6 @@ http://localhost:3000
 
 ---
 
-## 👨‍💻 Author
-
-Ashwini
-
----
-<img width="979" height="442" alt="image" src="https://github.com/user-attachments/assets/43eb3704-5b19-4f8f-ae2d-edadc76fd32e" />
-
-
-
-
-
 
 TRIVY OUTPUT
 ![Screenshot](https://github.com/user-attachments/assets/b7d49fc8-c252-4151-8ebc-c877c5c9ea27)
@@ -298,3 +287,8 @@ waitForQualityGate abortPipeline: true
 🔹 Outcome
 Ensured only quality-approved code proceeds to deployment.
 
+## 👨‍💻 Author
+
+Ashwini
+
+---
