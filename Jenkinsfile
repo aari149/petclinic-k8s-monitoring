@@ -92,6 +92,8 @@ pipeline {
     steps {
         withKubeConfig([credentialsId: 'k3s-kubeconfig']) {
             sh """
+                kubectl get nodes 
+                
                 kubectl create namespace staging || true
 
                 kubectl apply -f k8s/ -n staging
