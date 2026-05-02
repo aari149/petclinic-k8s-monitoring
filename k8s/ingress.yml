@@ -2,6 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: petclinic-ingress
+  namespace: staging
 spec:
   ingressClassName: nginx
   rules:
@@ -11,6 +12,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: petclinic
+                name: petclinic-service
                 port:
-                  number: 800
+                  number: 80
