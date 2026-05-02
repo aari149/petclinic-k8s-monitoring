@@ -67,33 +67,32 @@ pipeline {
             }
         }
 
-        stage('Deploy to k3s') {
-          
-            steps {
-                withKubeConfig([credentialsId: 'k3s-kubeconfig']) {
-                    sh '''
-                    set -e
+        stage('Deploy to kOps') {
+    steps {
+        withKubeConfig([credentialsId: 'kops-kubeconfig']) {
+            sh '''
+            set -e
 
-                    export IMAGE="$DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG"
+            echo "Checking cluster connectivity..."
+            kubectl get nodes
 
-                    echo "Checking cluster..."
-                    kubectl get nodes
+            echo "Creating namespace if not exists..."
+            kubectl create namespace staging || true
 
-                    echo "Creating namespace..."
-                    kubectl create namespace staging || true
+            echo "Applying Kubernetes manifests..."
+            kubectl apply -f k8s/ -n staging
 
-                    echo "Applying manifests..."
-                    kubectl apply -f k8s/ -n staging
+            echo "Updating image..."
+            kubectl set image deployment/${APP_NAME} \
+            ${APP_NAME}=${DOCKER_USER}/${IMAGE_NAME}:${IMAGE_TAG} \
+            -n staging
 
-                    echo "Updating image..."
-                    kubectl set image deployment/$APP_NAME $APP_NAME=$IMAGE -n staging || true
-
-                    echo "Rollout status..."
-                    kubectl rollout status deployment/$APP_NAME -n staging
-                    '''
-                }
-            }
+            echo "Waiting for rollout..."
+            kubectl rollout status deployment/${APP_NAME} -n staging
+            '''
         }
+    }
+}
 
         stage('Cleanup Docker Images') {
             steps {
